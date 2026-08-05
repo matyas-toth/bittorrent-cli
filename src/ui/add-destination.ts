@@ -20,12 +20,12 @@ function torrentDisplayName(source: string): string | undefined {
     }
   } else if (/^https?:\/\//i.test(trimmed)) {
     try {
-      candidate = path.basename(new URL(trimmed).pathname);
+      candidate = basenameForEitherPlatform(new URL(trimmed).pathname);
     } catch {
       return undefined;
     }
   } else {
-    candidate = path.basename(trimmed);
+    candidate = basenameForEitherPlatform(trimmed);
   }
 
   if (!candidate) return undefined;
@@ -40,6 +40,10 @@ function torrentDisplayName(source: string): string | undefined {
     .trim();
   if (!safe) return undefined;
   return WINDOWS_RESERVED_NAME.test(safe) ? `_${safe}` : safe;
+}
+
+function basenameForEitherPlatform(value: string): string {
+  return path.win32.basename(path.posix.basename(value));
 }
 
 function safeDecode(value: string): string {

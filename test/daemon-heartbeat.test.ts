@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { DaemonHeartbeat } from '../src/core/daemon-heartbeat.js';
 import { writeJsonAtomic } from '../src/core/json-store.js';
 import { getAppPaths } from '../src/core/paths.js';
+import { VERSION } from '../src/shared/constants.js';
 
 const directories: string[] = [];
 const originalDataDirectory = process.env.BITTORRENT_CLI_DATA_DIR;
@@ -37,7 +38,7 @@ describe('daemon heartbeat', () => {
     );
     expect(JSON.parse(await readFile(paths.heartbeatFile, 'utf8'))).toMatchObject({
       pid: process.pid,
-      version: '0.1.2',
+      version: VERSION,
     });
 
     await heartbeat.stop();

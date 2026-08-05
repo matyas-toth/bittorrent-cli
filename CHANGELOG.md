@@ -6,6 +6,16 @@ All notable changes to this project will be documented here. The format is based
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-08-05
+
+### Changed
+
+- Rework the README installation and first-use guide around non-technical end users.
+
+### Fixed
+
+- Extract clean torrent names from Windows and POSIX file paths on every supported platform.
+
 ## [0.1.2] - 2026-08-05
 
 ### Added
