@@ -45,6 +45,16 @@ describe('TorrentEngine lifecycle', () => {
     });
     expect(created.infoHash).toMatch(/^[a-f\d]{40}$/);
     expect(created.status).toMatch(/completed|seeding/);
+
+    const disposablePayload = path.join(root, 'payload', 'remove-me.txt');
+    await writeFile(disposablePayload, 'active removal regression fixture\n');
+    const disposable = await first.seed({
+      sourcePath: disposablePayload,
+      announce: [],
+      private: true,
+    });
+    await first.remove(disposable.id, false);
+    expect(first.snapshot().torrents.map((torrent) => torrent.id)).toEqual([created.id]);
     await first.close();
 
     const restored = new TorrentEngine();
@@ -58,6 +68,15 @@ describe('TorrentEngine lifecycle', () => {
       expect(snapshot.torrents).toHaveLength(1);
       expect(snapshot.torrents[0]?.name).toBe('hello.txt');
       expect(snapshot.torrents[0]?.infoHash).toBe(created.infoHash);
+
+      const restoredTorrent = snapshot.torrents[0];
+      if (!restoredTorrent) throw new Error('Expected the restored torrent.');
+      const internals = restored as unknown as {
+        runtimes: Map<string, { torrent: { destroy: () => void } }>;
+      };
+      internals.runtimes.get(restoredTorrent.id)?.torrent.destroy();
+      await restored.remove(restoredTorrent.id, false);
+      expect(restored.snapshot().torrents).toHaveLength(0);
     } finally {
       await restored.close();
     }

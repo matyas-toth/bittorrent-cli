@@ -207,7 +207,16 @@ export class TorrentEngine {
   async remove(id: string, deleteData: boolean): Promise<void> {
     const runtime = this.requireRuntime(id);
     const name = runtime.torrent.name || runtime.record.source;
-    await this.client.remove(runtime.torrent, { destroyStore: deleteData });
+    if (this.client.torrents.includes(runtime.torrent)) {
+      const torrentId = runtime.torrent.infoHash || runtime.torrent;
+      try {
+        await this.client.remove(torrentId, { destroyStore: deleteData });
+      } catch (error) {
+        // A fatal torrent error can remove it from WebTorrent while this request is in flight.
+        // In that case the application/session cleanup below is still the correct outcome.
+        if (this.client.torrents.includes(runtime.torrent)) throw error;
+      }
+    }
     this.runtimes.delete(id);
     await this.persist();
     this.addAlert('info', `${deleteData ? 'Deleted' : 'Removed'} ${name}`);

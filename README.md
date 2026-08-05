@@ -5,7 +5,7 @@ A persistent, full-screen BitTorrent client for people who live in the terminal.
 [WebTorrent](https://github.com/webtorrent/webtorrent) engine, so closing the UI does **not** stop
 active transfers.
 
-> **Project status:** `0.1.0` is a functional alpha. The core download, upload, persistence, TUI,
+> **Project status:** `0.1.1` is a functional alpha. The core download, upload, persistence, TUI,
 > and automation surfaces work. See [Scope](#scope-and-honest-limitations) before relying on it as
 > a drop-in replacement for a mature native client.
 
@@ -153,7 +153,7 @@ terminal experience. See [the architecture document](docs/ARCHITECTURE.md) for t
 
 ## Scope and honest limitations
 
-The target is qBittorrent-class day-to-day torrent management, but `0.1.0` does not yet reproduce
+The target is qBittorrent-class day-to-day torrent management, but `0.1.1` does not yet reproduce
 every libtorrent/qBittorrent feature. In particular, there is currently no RSS downloader/search
 plugin system, proxy/VPN-interface binding, encrypted peer-transport policy, torrent queue
 scheduler, alternate-rate schedule, embedded tracker, remote Web UI, IP-filter updater, or

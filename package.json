@@ -1,6 +1,6 @@
 {
   "name": "bittorrent-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A full-screen, keyboard-first BitTorrent client for the terminal.",
   "keywords": [
     "bittorrent",
