@@ -28,40 +28,75 @@ active transfers.
 - Node.js 22.12 or newer
 - A Unicode-capable interactive terminal for the TUI
 
-## Install
-
-During development:
+If you are unsure whether Node.js is installed, open PowerShell or a terminal and run:
 
 ```sh
-git clone <your-repository-url>
-cd bittorrent-cli
-npm install
-npm run build
-npm link
+node --version
 ```
 
-After the package is published:
+If the command is missing or reports a version older than `22.12`, install the current Node.js LTS
+release from [nodejs.org](https://nodejs.org/) first.
+
+## Install and start
+
+Install `bittorrent-cli` globally from npm:
 
 ```sh
 npm install --global bittorrent-cli
 ```
 
-## Use
-
-Open the client:
+Then start the full-screen client from any directory:
 
 ```sh
 bittorrent-cli
 ```
 
-Open a torrent directly. The TUI asks for a destination before adding it:
+Press `a` to add a torrent. Paste a magnet link or enter the path to a `.torrent` file, press
+Enter, review the suggested download folder, and press Enter again. The transfer continues in the
+background when you press `q` to leave the interface.
+
+You can also open a torrent directly. Surround paths containing spaces with quotes:
 
 ```sh
 bittorrent-cli ./MyCustomFile.torrent
 bittorrent-cli 'magnet:?xt=urn:btih:…'
 ```
 
-Use headless commands in scripts or over SSH:
+Only download or share content that you have the legal right to use.
+
+### Update
+
+```sh
+bittorrent-cli shutdown
+npm install --global bittorrent-cli@latest
+bittorrent-cli
+```
+
+Stopping first ensures the background process releases the old installation and restarts with the
+new version.
+
+### Uninstall
+
+```sh
+bittorrent-cli shutdown
+npm uninstall --global bittorrent-cli
+```
+
+Uninstalling the client does not remove your downloaded files.
+
+### If the command is not found
+
+Close and reopen the terminal after installation, then try `bittorrent-cli` again. If it is still
+not found, confirm that npm installed it successfully:
+
+```sh
+npm list --global bittorrent-cli
+```
+
+## Use from scripts or remote terminals
+
+The full-screen interface is the easiest way to use the client. These commands are also available
+for automation, scripts, and SSH sessions:
 
 ```sh
 bittorrent-cli add ./example.torrent --path ~/Downloads --paused
@@ -171,6 +206,18 @@ libtorrent remains an option for a future optional engine adapter if strict qBit
 parity becomes more important than the current zero-build-tool JavaScript install.
 
 ## Development
+
+Clone and link a development checkout instead of installing the published package:
+
+```sh
+git clone <your-repository-url>
+cd bittorrent-cli
+npm install
+npm run build
+npm link
+```
+
+Development commands:
 
 ```sh
 npm run dev          # run from TypeScript

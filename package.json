@@ -63,5 +63,17 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.66.0",
     "vitest": "^4.1.10"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matyas-toth/bittorrent-cli.git"
+  },
+  "homepage": "https://github.com/matyas-toth/bittorrent-cli#readme",
+  "bugs": {
+    "url": "https://github.com/matyas-toth/bittorrent-cli/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
