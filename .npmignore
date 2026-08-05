@@ -1,0 +1,6 @@
+src/
+test/
+.github/
+coverage/
+*.config.*
+tsconfig*.json

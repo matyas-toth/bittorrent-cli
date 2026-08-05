@@ -1,0 +1,20 @@
+name: Bug report
+description: Report reproducible incorrect behavior
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Use a legal, freely redistributable torrent when possible.
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Environment
+      description: OS, terminal, Node.js version, and bittorrent-cli version
+    validations:
+      required: true

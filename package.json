@@ -1,0 +1,67 @@
+{
+  "name": "bittorrent-cli",
+  "version": "0.1.0",
+  "description": "A full-screen, keyboard-first BitTorrent client for the terminal.",
+  "keywords": [
+    "bittorrent",
+    "torrent",
+    "cli",
+    "tui",
+    "ink",
+    "webtorrent"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "bittorrent-cli": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "SECURITY.md"
+  ],
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-package-assets.mjs",
+    "dev": "tsx src/cli.tsx",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "validate": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build",
+    "prepack": "npm run validate"
+  },
+  "dependencies": {
+    "@inkjs/ui": "^2.0.0",
+    "cli-truncate": "^6.1.1",
+    "commander": "^15.0.0",
+    "env-paths": "^4.0.0",
+    "ink": "^7.1.1",
+    "open": "^11.0.0",
+    "react": "^19.2.8",
+    "string-width": "^8.2.2",
+    "webtorrent": "^3.0.21",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.18",
+    "@types/webtorrent": "^0.110.1",
+    "eslint": "^10.8.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "ink-testing-library": "^4.0.0",
+    "prettier": "^3.9.6",
+    "tsx": "^4.23.7",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.66.0",
+    "vitest": "^4.1.10"
+  }
+}
