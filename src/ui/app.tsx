@@ -42,7 +42,14 @@ export function App({
   const { stdout } = useStdout();
   const width = stdout.columns || 100;
   const height = stdout.rows || 30;
-  const { snapshot, error, refresh, downloadHistory, uploadHistory } = useSnapshot(client);
+  const {
+    client: activeClient,
+    snapshot,
+    error,
+    refresh,
+    downloadHistory,
+    uploadHistory,
+  } = useSnapshot(client);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState<Filter>('all');
   const [query, setQuery] = useState('');
@@ -103,10 +110,14 @@ export function App({
     else if (input === '[') cycleFilter(-1);
     else if (input === ']') cycleFilter(1);
     else if (input === ' ' && selected)
-      void run(() => client.action(selected.id, selected.status === 'paused' ? 'resume' : 'pause'));
-    else if (input === 'r' && selected) void run(() => client.action(selected.id, 'recheck'));
+      void run(() =>
+        activeClient.action(selected.id, selected.status === 'paused' ? 'resume' : 'pause'),
+      );
+    else if (input === 'r' && selected) void run(() => activeClient.action(selected.id, 'recheck'));
     else if (input === 't' && selected)
-      void run(() => client.action(selected.id, selected.sequential ? 'rarest' : 'sequential'));
+      void run(() =>
+        activeClient.action(selected.id, selected.sequential ? 'rarest' : 'sequential'),
+      );
     else if (input === 'o' && selected) void open(selected.path);
   });
 
@@ -175,7 +186,7 @@ export function App({
             defaultPath={snapshot.settings.downloadPath}
             onCancel={() => setModal(undefined)}
             onSubmit={async (source, destination) => {
-              await client.add({ source, path: destination });
+              await activeClient.add({ source, path: destination });
               setModal(undefined);
               await refresh();
             }}
@@ -186,7 +197,9 @@ export function App({
             torrent={selected}
             deleteData={modal === 'delete'}
             onCancel={() => setModal(undefined)}
-            onConfirm={() => void run(() => client.remove(selected.id, modal === 'delete'), true)}
+            onConfirm={() =>
+              void run(() => activeClient.remove(selected.id, modal === 'delete'), true)
+            }
           />
         )}
         {modal === 'files' && selected && (
@@ -194,7 +207,7 @@ export function App({
             torrent={selected}
             onCancel={() => setModal(undefined)}
             onSubmit={async (indices) => {
-              await client.selectFiles(selected.id, indices);
+              await activeClient.selectFiles(selected.id, indices);
               setModal(undefined);
               await refresh();
             }}
@@ -208,7 +221,7 @@ export function App({
             settings={snapshot.settings}
             onCancel={() => setModal(undefined)}
             onSubmit={async (update) => {
-              await client.updateSettings(update);
+              await activeClient.updateSettings(update);
               setModal(undefined);
               await refresh();
             }}

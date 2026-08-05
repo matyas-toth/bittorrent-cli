@@ -4,10 +4,15 @@ import { TorrentEngine } from './core/torrent-engine.js';
 import { log, logError } from './core/logger.js';
 import { getAppPaths } from './core/paths.js';
 import { RpcServer } from './rpc/server.js';
+import { DaemonHeartbeat } from './core/daemon-heartbeat.js';
 
 export async function runDaemon(): Promise<void> {
-  const { lockFile } = getAppPaths();
+  const { lockFile, reports } = getAppPaths();
   await mkdir(path.dirname(lockFile), { recursive: true });
+  await mkdir(reports, { recursive: true });
+  process.report.directory = reports;
+  process.report.reportOnFatalError = true;
+  process.report.reportOnUncaughtException = true;
   await writeFile(
     lockFile,
     JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString() }),
@@ -17,9 +22,12 @@ export async function runDaemon(): Promise<void> {
     },
   );
   const engine = new TorrentEngine();
+  const heartbeat = new DaemonHeartbeat();
   try {
+    await heartbeat.start(engine.startedAt);
     await engine.start();
   } catch (error) {
+    await heartbeat.stop();
     await rm(lockFile, { force: true });
     throw error;
   }
@@ -37,6 +45,7 @@ export async function runDaemon(): Promise<void> {
       logError('Daemon shutdown', error);
       process.exitCode = 1;
     } finally {
+      await heartbeat.stop();
       await rm(lockFile, { force: true });
     }
   };
@@ -48,6 +57,7 @@ export async function runDaemon(): Promise<void> {
     try {
       await engine.close();
     } finally {
+      await heartbeat.stop();
       await rm(lockFile, { force: true });
     }
     throw error;

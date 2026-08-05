@@ -248,7 +248,7 @@ program
       (process.stdin as { isTTY?: boolean }).isTTY && (process.stdout as { isTTY?: boolean }).isTTY,
     );
     process.stdout.write(
-      `bittorrent-cli ${VERSION}\nNode             ${process.version}\nPlatform         ${process.platform} ${process.arch}\nInteractive TTY  ${interactive}\nDaemon           ${daemon}\nData             ${paths.data}\nConfig           ${paths.config}\nLogs             ${paths.logFile}\n`,
+      `bittorrent-cli ${VERSION}\nNode             ${process.version}\nPlatform         ${process.platform} ${process.arch}\nInteractive TTY  ${interactive}\nDaemon           ${daemon}\nData             ${paths.data}\nConfig           ${paths.config}\nLogs             ${paths.logFile}\nCrash reports    ${paths.reports}\n`,
     );
   });
 

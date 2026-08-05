@@ -23,6 +23,7 @@ import { loadSettings, saveSettings } from './settings-store.js';
 import { log, logError } from './logger.js';
 import { clientSettingsSchema } from '../shared/schemas.js';
 import { VERSION } from '../shared/constants.js';
+import { ensureDownloadDirectory } from './download-directory.js';
 
 const MAX_ALERTS = 100;
 
@@ -125,11 +126,13 @@ export class TorrentEngine {
     );
     if (duplicate) throw new UserError(`Torrent is already present: ${duplicate.torrent.name}`);
 
+    const destination = await ensureDownloadDirectory(request.path ?? this.settings.downloadPath);
+
     const record: PersistedTorrent = {
       id: randomUUID(),
       kind: 'download',
       source,
-      path: path.resolve(request.path ?? this.settings.downloadPath),
+      path: destination,
       paused: request.paused ?? !this.settings.autoStart,
       sequential: request.sequential ?? false,
       category: request.category ?? '',
@@ -300,7 +303,7 @@ export class TorrentEngine {
         'warning',
         `${torrent.name || displaySource(record.source)}: ${errorMessage(error)}`,
       );
-      logError(`Torrent warning ${record.id}`, error);
+      void log('WARN', `Torrent warning ${record.id}: ${errorMessage(error)}`);
     });
     torrent.on('error', (error) => {
       runtime.error = errorMessage(error);

@@ -13,7 +13,9 @@ export interface AppPaths {
   sessionFile: string;
   connectionFile: string;
   lockFile: string;
+  heartbeatFile: string;
   logFile: string;
+  reports: string;
 }
 
 export function getAppPaths(): AppPaths {
@@ -32,7 +34,9 @@ export function getAppPaths(): AppPaths {
     sessionFile: path.join(data, 'session.json'),
     connectionFile: path.join(data, 'daemon.json'),
     lockFile: path.join(data, 'daemon.lock'),
+    heartbeatFile: path.join(data, 'daemon-heartbeat.json'),
     logFile: path.join(logs, 'daemon.log'),
+    reports: path.join(logs, 'reports'),
   };
 }
 

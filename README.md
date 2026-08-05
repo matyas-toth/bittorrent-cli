@@ -5,7 +5,7 @@ A persistent, full-screen BitTorrent client for people who live in the terminal.
 [WebTorrent](https://github.com/webtorrent/webtorrent) engine, so closing the UI does **not** stop
 active transfers.
 
-> **Project status:** `0.1.1` is a functional alpha. The core download, upload, persistence, TUI,
+> **Project status:** `0.1.2` is a functional alpha. The core download, upload, persistence, TUI,
 > and automation surfaces work. See [Scope](#scope-and-honest-limitations) before relying on it as
 > a drop-in replacement for a mature native client.
 
@@ -95,23 +95,24 @@ Run `bittorrent-cli --help` or `bittorrent-cli <command> --help` for the complet
 
 ## Keyboard map
 
-| Key                  | Action                                            |
-| -------------------- | ------------------------------------------------- |
-| `j` / `k`, `↑` / `↓` | Move through torrents                             |
-| `a`                  | Add torrent or magnet URI                         |
-| `Space`              | Pause or resume                                   |
-| `d`                  | Remove torrent, keep data                         |
-| `x`                  | Remove torrent and delete data after confirmation |
-| `f`                  | Select files in a multi-file torrent              |
-| `r`                  | Rescan and verify files                           |
-| `t`                  | Toggle sequential / rarest-first selection        |
-| `o`                  | Open the download directory                       |
-| `[` / `]`            | Cycle status filters                              |
-| `1`–`4`              | Overview, files, peers, and trackers              |
-| `/`                  | Search names, hashes, categories, and tags        |
-| `s`                  | Settings                                          |
-| `?`                  | In-app keyboard reference                         |
-| `q`                  | Detach the UI; transfers continue                 |
+| Key                    | Action                                            |
+| ---------------------- | ------------------------------------------------- |
+| `j` / `k`, `↑` / `↓`   | Move through torrents                             |
+| `a`                    | Add torrent or magnet URI                         |
+| `Ctrl+B` / `Shift+Tab` | Return to the source step in the Add dialog       |
+| `Space`                | Pause or resume                                   |
+| `d`                    | Remove torrent, keep data                         |
+| `x`                    | Remove torrent and delete data after confirmation |
+| `f`                    | Select files in a multi-file torrent              |
+| `r`                    | Rescan and verify files                           |
+| `t`                    | Toggle sequential / rarest-first selection        |
+| `o`                    | Open the download directory                       |
+| `[` / `]`              | Cycle status filters                              |
+| `1`–`4`                | Overview, files, peers, and trackers              |
+| `/`                    | Search names, hashes, categories, and tags        |
+| `s`                    | Settings                                          |
+| `?`                    | In-app keyboard reference                         |
+| `q`                    | Detach the UI; transfers continue                 |
 
 ## Configuration
 
@@ -139,6 +140,11 @@ are also represented in the config schema. Network-stack changes take effect aft
 To isolate a portable/test instance, set `BITTORRENT_CLI_DATA_DIR` and
 `BITTORRENT_CLI_CONFIG_DIR`.
 
+Run `bittorrent-cli doctor` to locate the active data, configuration, log, and crash-report paths.
+The daemon writes a five-second heartbeat while running; a surviving heartbeat is reported in the
+log on the next start as evidence that the previous process did not shut down cleanly. Node.js
+diagnostic reports for fatal runtime failures are stored below the reported crash-report path.
+
 ## How it works
 
 The first command starts a detached daemon. Clients discover it through a mode-0600 connection
@@ -153,7 +159,7 @@ terminal experience. See [the architecture document](docs/ARCHITECTURE.md) for t
 
 ## Scope and honest limitations
 
-The target is qBittorrent-class day-to-day torrent management, but `0.1.1` does not yet reproduce
+The target is qBittorrent-class day-to-day torrent management, but `0.1.2` does not yet reproduce
 every libtorrent/qBittorrent feature. In particular, there is currently no RSS downloader/search
 plugin system, proxy/VPN-interface binding, encrypted peer-transport policy, torrent queue
 scheduler, alternate-rate schedule, embedded tracker, remote Web UI, IP-filter updater, or

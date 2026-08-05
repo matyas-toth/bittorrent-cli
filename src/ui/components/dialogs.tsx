@@ -4,6 +4,7 @@ import { Alert, ConfirmInput, MultiSelect, Spinner, TextInput } from '@inkjs/ui'
 import type { ClientSettings, TorrentSnapshot } from '../../shared/types.js';
 import { colors } from '../theme.js';
 import { formatBytes } from '../format.js';
+import { suggestDestinationPath } from '../add-destination.js';
 
 function DialogFrame({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -40,13 +41,21 @@ export function AddDialog({
   onCancel: () => void;
 }) {
   const [source, setSource] = useState(initialSource);
-  const [destination, setDestination] = useState(defaultPath);
+  const [destination, setDestination] = useState(() =>
+    initialSource ? suggestDestinationPath(defaultPath, initialSource) : defaultPath,
+  );
   const [step, setStep] = useState(initialSource ? 1 : 0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
   useInput((input, key) => {
-    if (key.escape && !busy) onCancel();
-    if (key.leftArrow && step === 1 && !busy) setStep(0);
+    if (busy) return;
+    const goBack =
+      step === 1 && ((key.ctrl && input.toLowerCase() === 'b') || (key.shift && key.tab));
+    if (goBack) {
+      setStep(0);
+      return;
+    }
+    if (key.escape) onCancel();
   });
 
   const submit = async () => {
@@ -68,12 +77,15 @@ export function AddDialog({
         <>
           <Text color={colors.muted}>Torrent file, URL, info hash, or magnet URI</Text>
           <TextInput
+            key="source-input"
             defaultValue={source}
             placeholder="magnet:?xt=… or ./file.torrent"
             onChange={setSource}
             onSubmit={(value) => {
-              if (value.trim()) {
-                setSource(value);
+              const normalized = value.trim();
+              if (normalized) {
+                setSource(normalized);
+                setDestination(suggestDestinationPath(defaultPath, normalized));
                 setStep(1);
               }
             }}
@@ -83,6 +95,7 @@ export function AddDialog({
         <>
           <Text color={colors.muted}>Save files to</Text>
           <TextInput
+            key="destination-input"
             defaultValue={destination}
             placeholder="Destination folder"
             onChange={setDestination}
@@ -92,7 +105,7 @@ export function AddDialog({
           {busy ? (
             <Spinner label="Adding torrent and fetching metadata…" />
           ) : (
-            <Text color={colors.subtle}>Enter add · ← back · Esc cancel</Text>
+            <Text color={colors.subtle}>Enter add · Ctrl+B / Shift+Tab back · Esc cancel</Text>
           )}
         </>
       )}
