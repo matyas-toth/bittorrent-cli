@@ -1,3 +1,5 @@
+![image](assets/bittorrentcli_big.png)
+
 # bittorrent-cli
 
 A persistent, full-screen BitTorrent client for people who live in the terminal. It combines an
